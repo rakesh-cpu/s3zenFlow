@@ -19,19 +19,12 @@ export default function S3Manager() {
   const [uploads, setUploads] = useState<UploadFile[]>([]);
   const { toast } = useToast();
 
-  const { data: buckets = [], isLoading: bucketsLoading } = useQuery<S3Bucket[]>({
+  const { data: buckets, isLoading: bucketsLoading, error: bucketsError } = useQuery<S3Bucket[]>({
     queryKey: ["/api/buckets"],
     enabled: !selectedBucket,
-    onError: () => {
-      toast({
-        title: "Error loading buckets",
-        description: "Failed to fetch S3 buckets. Please check your AWS credentials.",
-        variant: "destructive",
-      });
-    },
   });
 
-  const { data: objects = [], isLoading: objectsLoading } = useQuery<S3Object[]>({
+  const { data: objects, isLoading: objectsLoading, error: objectsError } = useQuery<S3Object[]>({
     queryKey: ["/api/objects", selectedBucket?.name, currentPath],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -43,14 +36,24 @@ export default function S3Manager() {
       return response.json();
     },
     enabled: !!selectedBucket,
-    onError: () => {
-      toast({
-        title: "Error loading files",
-        description: "Failed to fetch bucket contents. Please try again.",
-        variant: "destructive",
-      });
-    },
   });
+
+  // Handle query errors with toast notifications
+  if (bucketsError) {
+    toast({
+      title: "Error loading buckets",
+      description: "Failed to fetch S3 buckets. Please check your AWS credentials.",
+      variant: "destructive",
+    });
+  }
+
+  if (objectsError) {
+    toast({
+      title: "Error loading files",
+      description: "Failed to fetch bucket contents. Please try again.",
+      variant: "destructive",
+    });
+  }
 
   const createFolderMutation = useMutation({
     mutationFn: async (folderName: string) => {
@@ -130,7 +133,7 @@ export default function S3Manager() {
   if (!selectedBucket) {
     return (
       <BucketSelector
-        buckets={buckets}
+        buckets={buckets || []}
         isLoading={bucketsLoading}
         onSelectBucket={setSelectedBucket}
       />
@@ -140,7 +143,7 @@ export default function S3Manager() {
   return (
     <FileExplorer
       bucketName={selectedBucket.name}
-      objects={objects}
+      objects={objects || []}
       currentPath={currentPath}
       isLoading={objectsLoading}
       onNavigate={setCurrentPath}
