@@ -1,0 +1,154 @@
+Here's a comprehensive prompt for building your S3 bucket automation tool with React.js and Tailwind CSS:
+
+***
+
+**Project Title: S3 Bucket File Manager with Upload & URL Management**
+
+Create a modern, elegant S3 bucket file management interface using React.js and Tailwind CSS that allows users to browse, upload, and manage files in AWS S3 buckets with an intuitive file explorer experience.
+
+### Core Requirements
+
+**Technology Stack:**
+- React.js with hooks (useState, useEffect, useCallback)
+- Tailwind CSS for styling
+- AWS SDK for JavaScript (v3) for S3 operations
+- React-dropzone for drag-and-drop functionality
+- React-icons for consistent iconography
+
+### Detailed Feature Specifications
+
+**1. Bucket Selection Interface**
+- Display all available S3 buckets in a clean grid layout with bucket icons
+- Show bucket creation date and region as metadata
+- Implement search/filter functionality for buckets
+- Each bucket card should have hover effects and click animations
+- Loading states with skeleton loaders while fetching buckets
+
+**2. File Explorer Interface**
+- Tree-view navigation sidebar showing folder hierarchy
+- Main content area displaying current directory contents
+- Breadcrumb navigation at the top showing current path
+- File/folder icons with different colors (folders: blue, images: green, documents: gray)
+- Grid and list view toggle options
+- File size, last modified date, and file type indicators
+
+**3. Image Preview & URL Management**
+- Thumbnail previews for images (lazy-loaded)
+- Click on any image to see larger preview in modal
+- **Copy URL Feature**: Each image should have a "Copy URL" button that appears on hover
+- Show copyable public URL in a styled input field below selected image
+- Toast notifications for successful URL copying
+- Support for common image formats (JPG, PNG, GIF, WebP, SVG)
+
+**4. Upload Functionality**
+- **Drag & Drop Zone**: Large, prominent drop area with dashed border
+- **Multi-file Upload**: Support selecting and uploading multiple files simultaneously
+- **Progress Indicators**: Individual progress bars for each uploading file
+- **Upload Preview**: Show thumbnails of files being uploaded before confirmation
+- **Upload to Current Directory**: Files upload to currently selected folder
+- **Error Handling**: Clear error messages for failed uploads with retry options
+
+**5. Folder Management**
+- **Create Folder Button**: Prominent "New Folder" button in toolbar
+- **Folder Creation Modal**: Clean modal with folder name input and validation
+- **Nested Folder Support**: Allow creating folders within folders
+- **Folder Actions**: Right-click context menu or action buttons for rename/delete
+
+### UI/UX Design Specifications
+
+**Color Scheme & Styling:**
+- Primary: Blue-600 for actions and highlights
+- Secondary: Gray-100/200 for backgrounds
+- Success: Green-500 for successful operations
+- Warning: Yellow-500 for warnings
+- Error: Red-500 for errors
+- Use Tailwind's shadow utilities for depth and layering
+
+**Layout Structure:**
+```
+┌─────────────────────────────────────────┐
+│ Header: Breadcrumb Navigation           │
+├─────────────┬───────────────────────────┤
+│ Sidebar:    │ Main Content Area:        │
+│ - Bucket    │ - Upload Drop Zone        │
+│ - Tree Nav  │ - File/Folder Grid        │
+│ - Actions   │ - Selected Item Details   │
+└─────────────┴───────────────────────────┘
+```
+
+**Component Architecture:**
+- `S3Manager` (main container)
+- `BucketSelector` (bucket selection grid)
+- `FileExplorer` (main file browser)
+- `NavigationSidebar` (tree navigation)
+- `FileGrid` (file/folder display)
+- `UploadZone` (drag-drop upload area)
+- `ImagePreview` (modal for image preview)
+- `URLCopyField` (copyable URL display)
+- `CreateFolderModal` (folder creation)
+- `ProgressIndicator` (upload progress)
+
+### Technical Implementation Details
+
+**State Management:**
+- Current bucket selection
+- Current directory path
+- File/folder listings
+- Upload progress tracking
+- Selected files/folders
+- Loading states for all operations
+
+**AWS S3 Operations Needed:**
+- `listBuckets()` - Get all buckets
+- `listObjectsV2()` - Get objects in bucket/folder
+- `getObject()` - Get file details
+- `putObject()` - Upload files
+- `getSignedUrl()` - Get public URLs
+
+**User Experience Enhancements:**
+- Smooth transitions and animations using Tailwind's transition utilities
+- Loading skeletons for all async operations
+- Keyboard shortcuts (Ctrl+U for upload, Ctrl+N for new folder)
+- Responsive design for mobile and desktop
+- Empty states with helpful illustrations
+- Confirmation dialogs for destructive actions
+
+**Error Handling & Edge Cases:**
+- Network connectivity issues
+- Invalid file types
+- Large file upload handling
+- Permission denied scenarios
+- Bucket access errors
+- Empty bucket/folder states
+
+### Specific UI Components to Implement
+
+**Upload Drop Zone:**
+```jsx
+// Dashed border, centered content, smooth hover effects
+// "Drop files here or click to browse" with upload icon
+// Preview thumbnails of selected files before upload
+```
+
+**File Item Card:**
+```jsx
+// Image thumbnail, filename, file size, copy URL button
+// Hover effects revealing action buttons
+// Context menu for additional actions
+```
+
+**URL Copy Field:**
+```jsx
+// Read-only input with copy button
+// Success animation when copied
+// Proper URL validation and formatting
+```
+
+### Performance Considerations
+- Implement virtual scrolling for large directories
+- Lazy load image thumbnails
+- Debounce search inputs
+- Cache bucket and folder listings
+- Optimize re-renders with React.memo and useCallback
+
+This tool should feel like a modern file manager (similar to Google Drive or Dropbox) but specifically optimized for S3 bucket management with focus on image URL generation and copying functionality.
