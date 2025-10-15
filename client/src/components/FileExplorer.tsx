@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronLeft, FolderPlus, Upload, Grid3x3, List, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ThemeToggle } from "./ThemeToggle";
 import { FileGrid } from "./FileGrid";
 import { UploadZone } from "./UploadZone";
 import { CreateFolderModal } from "./CreateFolderModal";
@@ -110,6 +111,7 @@ export function FileExplorer({
                 <FolderPlus className="h-4 w-4 mr-2" />
                 New Folder
               </Button>
+              <ThemeToggle />
             </div>
           </div>
 

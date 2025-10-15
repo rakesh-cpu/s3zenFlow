@@ -22,11 +22,34 @@ export default function S3Manager() {
   const { data: buckets = [], isLoading: bucketsLoading } = useQuery<S3Bucket[]>({
     queryKey: ["/api/buckets"],
     enabled: !selectedBucket,
+    onError: () => {
+      toast({
+        title: "Error loading buckets",
+        description: "Failed to fetch S3 buckets. Please check your AWS credentials.",
+        variant: "destructive",
+      });
+    },
   });
 
   const { data: objects = [], isLoading: objectsLoading } = useQuery<S3Object[]>({
     queryKey: ["/api/objects", selectedBucket?.name, currentPath],
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        bucket: selectedBucket?.name || "",
+        ...(currentPath && { prefix: currentPath }),
+      });
+      const response = await fetch(`/api/objects?${params}`);
+      if (!response.ok) throw new Error("Failed to fetch objects");
+      return response.json();
+    },
     enabled: !!selectedBucket,
+    onError: () => {
+      toast({
+        title: "Error loading files",
+        description: "Failed to fetch bucket contents. Please try again.",
+        variant: "destructive",
+      });
+    },
   });
 
   const createFolderMutation = useMutation({
