@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { BucketSelector } from "@/components/BucketSelector";
 import { FileExplorer } from "@/components/FileExplorer";
@@ -39,21 +39,25 @@ export default function S3Manager() {
   });
 
   // Handle query errors with toast notifications
-  if (bucketsError) {
-    toast({
-      title: "Error loading buckets",
-      description: "Failed to fetch S3 buckets. Please check your AWS credentials.",
-      variant: "destructive",
-    });
-  }
+  useEffect(()=>{
+    if(bucketsError){
+      toast({
+        title: "Error loading buckets",
+        description: "Failed to fetch S3 buckets. Please check your AWS credentials.",
+        variant: "destructive",
+      })
+    }
+  },[bucketsError,toast]);
 
-  if (objectsError) {
-    toast({
-      title: "Error loading files",
-      description: "Failed to fetch bucket contents. Please try again.",
-      variant: "destructive",
-    });
-  }
+  useEffect(()=>{
+    if(objectsError){
+      toast({
+        title: "Error loading files",
+        description: "Failed to fetch bucket contents. Please try again.",
+        variant: "destructive",
+      })
+    }
+  },[objectsError,toast]);
 
   const createFolderMutation = useMutation({
     mutationFn: async (folderName: string) => {

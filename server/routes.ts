@@ -11,7 +11,6 @@ import {
 const upload = multer({ storage: multer.memoryStorage() });
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // List all S3 buckets
   app.get("/api/buckets", async (req, res) => {
     try {
       const buckets = await listBuckets();
@@ -22,7 +21,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // List objects in a bucket
   app.get("/api/objects", async (req, res) => {
     try {
       const { bucket, prefix } = req.query;
@@ -42,7 +40,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Upload file
+
   app.post("/api/upload", upload.single("file"), async (req, res) => {
     try {
       const { bucket, key } = req.body;
